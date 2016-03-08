@@ -4,7 +4,7 @@ fespace Ph(Th,P0);
 
 Ph h = hTriangle;
 
-real tau=0.1, theta=0;
+real tau=0.1, theta=0.;
 
 func real f(real t){
 	return x^2*(1-x)^2 + t*(-2+12*x-11*x^2-2*x^3+x^4);
@@ -22,22 +22,22 @@ out<<endl;
 Vh u,v,uOld;
 Vh f1,f0;
 
-problem aTau(u,v) = int2d(Th)(u*v+theta*tau*(dx(u)*dx(v)+dy(u)*dy(v)) + u*v)
-					- int2d(Th)(uOld*v+(1-theta)*tau*(dx(uOld)*dx(v)+dy(uOld)*dy(v)) + uOld*v)
+problem aTau(u,v) = int2d(Th)(u*v+theta*tau*(dx(u)*dx(v)+dy(u)*dy(v) + u*v))
+					- int2d(Th)(uOld*v+(1-theta)*tau*(dx(uOld)*dx(v)+dy(uOld)*dy(v) + uOld*v))
 					- int2d(Th)(tau*(theta*f1+(1-theta)*f0)*v);
 					
 
 while(theta <= 1)
 {
 	real t=0, T = 3;
-	oldU = 0; //IC
+	uOld = 0; //IC
 	out<<theta<<",";
 	for(int j=0; j<T/tau; j++){
 		t=t+tau;
-		f1=f((n+1)*tau);
-		f0=f(n*tau);
+		f1=f((j+1)*tau);
+		f0=f(j*tau);
 		aTau;
-		oldU = ul
+		uOld = u;
 		plot(u);
 		Vh uex = t*x^2+(1-x)^2;
 		Vh err = u-uex;
