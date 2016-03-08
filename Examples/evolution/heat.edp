@@ -1,0 +1,24 @@
+mesh Th = square(16,16);
+fespace Vh(Th,P1);
+Vh u,v,uu,f,g;
+
+real dt=0.1, mu=0.01;
+
+problem dHeat(u,v) = int2d(Th)(u*v+ dt*mu*(dx(u)*dx(v)+dy(u)*dy(v)))
+					 + int2d(Th)(-uu*v-dt*f*v) 
+					 + on(1,2,3,4,u=g);
+					 
+real t=0;
+
+uu=0; //u(x,y,0) = 0
+
+for (int j=0; j<=3/dt; j++)
+{
+	t=t+dt;
+	f = x^4-mu*t*12*x^2;
+	g = t*x^4;
+	dHeat;
+	plot(u,wait=true);
+	uu=u;
+	cout<<"t="<<t<<"L^2 Norm="<<sqrt(int2d(Th)(u-t*x^4)^2)<<endl;
+}
