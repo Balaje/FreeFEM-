@@ -1,0 +1,23 @@
+border g1(t=-1,0){x=t;y=-1;};
+border g2(t=-1,0){x=0;y=t;};
+border g3(t=0,1){x=t;y=0;};
+border g4(t=0,1){x=1;y=t;};
+border g5(t=1,-1){x=t;y=1;};
+border g6(t=1,-1){x=-1;y=t;};
+
+mesh Th = buildmesh(g1(10)+g2(10)+g3(10)+g4(10)+g5(10)+g6(10));
+
+plot(Th,wait=true);
+
+fespace Vh(Th,P1);
+
+Vh u,v;
+
+func f = 0;
+func  g = x*y;
+
+problem Poisson(u,v) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) + int2d(Th)(f*v) + on(g1,g2,g3,g4,g5,g6,u=g);
+
+Poisson;
+
+plot(u,wait = true);
