@@ -1,3 +1,6 @@
+// Problem 1:  -(u_xx + u_yy) = f(x,y) = 0 on Omega,   u = g = xy on Gamma (profile.txt)
+// Problem 1:  -(u_xx + u_yy) = f(x,y) = 2*pi^2*sin(pi*x)*cos(pi*y) on Omega,   u = g on Gamma (profile1.txt)
+
 border g1(t=-1,0){x=t;y=-1;};
 border g2(t=-1,0){x=0;y=t;};
 border g3(t=0,1){x=t;y=0;};
@@ -13,11 +16,23 @@ fespace Vh(Th,P1);
 
 Vh u,v;
 
-func f = 0;
-func  g = x*y;
+func f = 2*pi^2*sin(pi*x)*cos(pi*y);
+func  g = sin(pi*x)*cos(pi*y);
 
-problem Poisson(u,v) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) + int2d(Th)(f*v) + on(g1,g2,g3,g4,g5,g6,u=g);
+problem Poisson(u,v) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) + int2d(Th)(f*v) + on(g1,g3,g5,u=-sin(pi*x)) + on(g2,g4,g6,u=0);
 
 Poisson;
 
+ofstream ff("profile1.txt");
+for (int i=0; i<Th.nt; i++)
+{
+	for(int j=0; j<3; j++)
+	{
+		ff<<Th[i][j].x<<" "<<Th[i][j].y<<" "<<u[][Vh(i,j)]<<endl;
+	}
+	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<u[][Vh(i,0)]<<"\n\n\n";
+}
+
+
 plot(u,wait = true);
+
