@@ -7,7 +7,7 @@ border g6(t=1,-1){x=-1;y=t;};
 
 
 int N = 30;
-int n = 3,p; // Mesh size for the first loop.
+int n = 5,p; // Mesh size for the first loop.
 
 real[int] l2error(n);
 real[int] order(n-1);
