@@ -22,16 +22,18 @@ for(p=0; p<n; p++)
 	Vh Ue = sin(pi*x)*cos(pi*y);
 
 	func f = 2*pi^2*sin(pi*x)*cos(pi*y);
-	func uexact = sin(pi*x)*cos(pi*y);
+	//func uexact = sin(pi*x)*cos(pi*y);
 
 	problem Poisson(u,v) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) - int2d(Th)(f*v) + on(g1,g5,u=-sin(pi*x)) + on(g2,g4,g6,u=0)
 							+ on(g3,u=sin(pi*x));
 
 	Poisson;
 	
+	Vh err = u-Ue;
+	
 	plot(u, fill=true, wait = false);
 	
-	l2error[p] = sqrt( int2d(Th)((u-uexact))^2 );
+	l2error[p] = sqrt( int2d(Th)(err^2) );
 	
 	cout<<"L^2 - error = "<<l2error[p]<<" At iteration "<<p+1<<endl;
 	N = N*2;
