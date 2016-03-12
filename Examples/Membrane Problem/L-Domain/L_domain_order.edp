@@ -33,7 +33,7 @@ for(p=0; p<n; p++)
 	
 	plot(u, fill=true, wait = false);
 	
-	l2error[p] = sqrt( int2d(Th)(err^2) );
+	l2error[p] = sqrt( int2d(Th)(err^2) ); //L^2 error
 	
 	cout<<"L^2 - error = "<<l2error[p]<<" At iteration "<<p+1<<endl;
 	N = N*2;
