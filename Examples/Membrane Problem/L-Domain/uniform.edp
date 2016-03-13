@@ -1,0 +1,48 @@
+/*border g1(t=-1,0){x=t;y=-1;};
+border g2(t=-1,0){x=0;y=t;};
+border g3(t=0,1){x=t;y=0;};
+border g4(t=0,1){x=1;y=t;};
+border g5(t=1,-1){x=t;y=1;};
+border g6(t=1,-1){x=-1;y=t;};*/
+
+int N = 40;
+mesh Th1 = square(N,N,[x,y]);
+mesh Th2 = square(N,N,[x,y+1]);
+mesh Th3 = square(N,N,[x+1,y+1]);
+//plot(Th1,wait =true);
+
+//mesh Th2 = movemesh(Th,[(x+1)*2,y+1]);
+
+mesh Th = Th1+Th2+Th3;
+
+plot(Th,wait = true);
+
+fespace Vh(Th,P1);
+
+Vh u,v,Ue;
+
+/*
+// get data of the mesh
+int nbtriangles=Th.nt;
+for (int i=0;i<nbtriangles;i++)
+	for (int j=0; j <3; j++)
+		if(Th[i][j].label == 1)
+			cout<<"Th[i][j].x = "<<Th[i][j].x<<"\t\t"<<"Th[i][j].y = "<<Th[i][j].y<<endl;
+*/
+
+Ue = sin(pi*x)*cos(pi*y);
+func f = 2*pi^2*sin(pi*x)*cos(pi*y);
+//func uexact = sin(pi*x)*cos(pi*y);
+
+problem Poisson(u,v) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) - int2d(Th)(f*v) + on(0,6,10,u=-sin(pi*x)) + on(2,9,7,4,u=0)
+							+ on(8,u=sin(pi*x));
+
+Poisson;
+
+
+plot(u,wait = true,value = true);
+plot(Ue, wait = true,value = true);
+
+Vh error = u-Ue;
+cout<<"L^2 error = "<<int2d(Th)(error^2)<<endl;
+
