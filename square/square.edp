@@ -34,4 +34,7 @@ set(A,solver=sparsesolver);
 //Solve the system of linear equations
 uh[] = A^-1*F[];
 
+Vh error = uh-Ue;
+
+cout<<"L^2 error = "<<int2d(Th)(error^2);
 plot(uh,wait=debug);
