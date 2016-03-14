@@ -1,5 +1,34 @@
 bool debug = true;
 
-mesh Th = square(10,10);
+int N = 10;
+
+mesh Th = square(N,N);
+fespace Vh (Th,P1); //Defining Piecewise Linear elements on space Vh;
 
 plot(Th);
+
+macro Grad(u) [dx(u),dy(u)] //Defining macros for Gradient.
+
+func f = 2*pi^2*sin(pi*x)*cos(pi*y); // Right hand side functions
+
+Vh uh, vh; //Choose uh and vh from Vh space
+
+//Defining the variational form. Other way of declaring:
+// and comment out varf
+varf a(uh,vh) = int2d(Th)(Grad(uh)'*Grad(vh)) + on(1,2,3,4,uh=0); //bilinear form
+// problem a(uh,vh) = int2d(Th)(Grad(uh)*Grad(vh)') - int2d(f*vh) + on(1,2,3,4,uh=0);
+
+matrix A = a(Vh,Vh); //Declaring the matrix A
+
+//Defining the linear form
+varf l(unused,vh) = int2d(Th)(f*vh);
+
+Vh F;
+//Defining the rhs vector
+F[] = l(0,Vh);
+
+set(A,solver=sparsesolver);
+//Solve the system of linear equations
+uh[] = A^-1*F[];
+
+plot(uh,wait=debug);
