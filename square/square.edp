@@ -1,3 +1,9 @@
+/* Problem of finding the solution of 
+	-(uxx+uyy) = f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y) in \Omega
+	u = 0 on \Gamma
+	
+	Exact solution u(x,y) = sin(pi*x)*sin(pi*y);
+*/
 bool debug = true;
 
 int N = 20;
@@ -36,5 +42,5 @@ uh[] = A^-1*F[];
 
 Vh error = uh-Ue;
 
-cout<<"L^2 error = "<<int2d(Th)(error^2);
+cout<<endl<<"L^2 error = "<<int2d(Th)(error^2)<<endl<<endl;
 plot(uh,wait=debug);
