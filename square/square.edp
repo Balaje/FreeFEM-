@@ -1,0 +1,5 @@
+bool debug = true;
+
+mesh Th = square(10,10);
+
+plot(Th);
