@@ -1,6 +1,6 @@
 bool debug = true;
 
-int N = 10;
+int N = 20;
 
 mesh Th = square(N,N);
 fespace Vh (Th,P1); //Defining Piecewise Linear elements on space Vh;
@@ -9,10 +9,13 @@ plot(Th);
 
 macro Grad(u) [dx(u),dy(u)] //Defining macros for Gradient.
 
-func f = 2*pi^2*sin(pi*x)*cos(pi*y); // Right hand side functions
+func f = 2*pi^2*sin(pi*x)*sin(pi*y); // Right hand side functions
 
 Vh uh, vh; //Choose uh and vh from Vh space
 
+Vh Ue;
+
+Ue = sin(pi*x)*sin(pi*y);
 //Defining the variational form. Other way of declaring:
 // and comment out varf
 varf a(uh,vh) = int2d(Th)(Grad(uh)'*Grad(vh)) + on(1,2,3,4,uh=0); //bilinear form
