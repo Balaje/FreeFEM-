@@ -11,7 +11,7 @@ int N = 20;
 mesh Th = square(N,N);
 fespace Vh (Th,P1); //Defining Piecewise Linear elements on space Vh;
 
-plot(Th);
+plot(Th,wait=true);
 
 macro Grad(u) [dx(u),dy(u)] //Defining macros for Gradient.
 
@@ -42,5 +42,5 @@ uh[] = A^-1*F[];
 
 Vh error = uh-Ue;
 
-cout<<endl<<"L^2 error = "<<int2d(Th)(error^2)<<endl<<endl;
+cout<<endl<<"L^2 error = "<<sqrt(int2d(Th)(error^2))<<endl<<endl;
 plot(uh,wait=debug);

@@ -6,7 +6,7 @@
 */
 
 bool debug = false;
-//load "Element_P3"
+load "Element_P3"
 
 int N = 20;
 
@@ -17,7 +17,7 @@ real[int] l2error(n), order(n);
 for (int p=0; p<n; p++)
 {
 	mesh Th = square(N,N);
-	fespace Vh (Th,P2); //Defining Piecewise Linear elements on space Vh;
+	fespace Vh (Th,P1); //Defining Piecewise Linear elements on space Vh;
 
 	plot(Th,wait=debug);
 
