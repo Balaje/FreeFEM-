@@ -1,6 +1,6 @@
 bool debug = true;
 
-mesh Th = square(50,50);
+mesh Th = square(10,10);
 
 fespace Vh(Th,P1nc);
 
