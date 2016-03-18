@@ -6,46 +6,53 @@
 	Exact solution u(x,y) = sin(pi*x)*sin(pi*y);
 */
 
-bool debug = false;
+bool debug = true;
 verbosity = 0; //To clear any previous outputs
 
 real theta = 4.*pi/3.;
 real a = 1., b = 1.;
 int Neumann = 2; //Neumann Boundary condtion value.
 
+load "Element_P3"
+
+
 border G1(t=0,theta){x=a*cos(t);y=b*sin(t);};
 border G2(t=theta,2*pi){x=a*cos(t);y=b*sin(t);};
 
-int N = 4;
+int N = 6;
 real[int] L2error(N);
 real[int] order(N-1);
+real[int] meshparam(N);
 
 func f = -4*(cos(x^2+y^2-1) - (x^2+y^2)*sin(x^2+y^2-1));
 func phiexact = sin(x^2+y^2-1);
 
-int n = 20;
+int n = 5;
 for (int i=0; i<N; i++)
 {
 	mesh Th = buildmesh(G1(n)+G2(n));
 	fespace Vh(Th,P1);
 	
-	plot(Th,wait=true); 
+	plot(Th,wait=debug); 
 	
 	Vh phi,w;
+	Vh phie = phiexact;
 	
+	Vh h = hTriangle;
 	solve Prob(phi,w,solver=LU) = int2d(Th)(dx(phi)*dx(w)+dy(phi)*dy(w))	
 								  - int2d(Th)(f*w) - int1d(Th,G2)(2*w) + on(G1,phi=0); //Account for Neumann B.C using int1d
 								  
 	plot(phi,wait=debug);
+	plot(phie,wait=debug);
 	
 	L2error[i] = sqrt( int2d(Th)((phi-phiexact)^2) );
-
+	meshparam[i] = h[].max;
 	n = n*2;
 }
 
 for(int j=0; j<N-1; j++)
 {
 	cout<<"L2 error= "<<L2error[j]<<endl;
-	order[j] = log(L2error[j]/L2error[j+1])/log(2.);
+	order[j] = log(L2error[j]/L2error[j+1])/log(meshparam[j]/meshparam[j+1]);
 	cout<<"Order of convergence = "<<order[j]<<endl;
 }
