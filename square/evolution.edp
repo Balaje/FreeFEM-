@@ -1,41 +1,55 @@
-bool debug = true;
-mesh Th = square(12,12);
+bool debug = false;
+mesh Th = square(50,50);
 
 fespace Vh(Th,P1);
 
 func real f(real t){
-	return -exp(-t)*sin(pi*x)*sin(pi*y)*(1-2*pi^2);
+	return exp(-t)*sin(pi*x)*sin(pi*y)*(2*pi^2-1);
 }
 
-real delt = 0.1;
+real delt = 0.01;
 real t0 = 0, tf = 1;
 
 int N = (tf-t0)/delt;
 
-Vh u, uold, v;
-Vh f1,f0;
+Vh u, v;
+Vh f1;
+
+func u0 = sin(pi*x)*sin(pi*y);
+Vh uold = u0;
 
 // Never place two different functions in the same integral
-varf a(u,v) = int2d(Th)(u*v + delt*(dx(u)*dx(v)+dy(u)*dy(v))) -int2d(Th)(uold*v);
+//varf a(u,v) = int2d(Th)(u*v + delt*(dx(u)*dx(v)+dy(u)*dy(v))) -int2d(Th)(uold*v) + on(1,2,3,4,u=0);
 
-varf l(unused,v) = int2d(Th)(delt*(f1*v));
+//varf l(unused,v) = int2d(Th)(delt*(f1*v));
+problem a(u,v) = int2d(Th)( u*v + delt*(dx(u)*dx(v)+dy(u)*dy(v)) ) - int2d(Th)(uold*v)
+					- int2d(Th)(delt*(f1*v)) + on(1,2,3,4,u=0);
 
 real t=0;
+
 for (int i=0; i<N; i++)
 {
 	t = t+delt;
 	f1 = f(delt*(i+1));
 	
-	matrix A = a(Vh,Vh);
+	/*matrix A = a(Vh,Vh);
 	Vh F;
 	
 	F[] = l(0,Vh);
 	
 	set(A,solver=sparsesolver);
 	
-	u[] = A^-1*F[];
+	u[] = A^-1*F[];*/
+	
+	a;
 	
 	uold = u;
 	
-	plot(u);
+	Vh uexact = exp(-t)*(sin(pi*x)*sin(pi*y));
+	
+	Vh error = u-uexact;
+	
+	cout<<"L^2 error = "<<sqrt(int2d(Th)(error^2))<<endl;
+	plot(u,wait=debug,value=true);
+	plot(uexact,wait=debug,value=true);
 }
