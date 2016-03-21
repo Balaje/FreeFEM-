@@ -1,0 +1,41 @@
+bool debug = true;
+mesh Th = square(12,12);
+
+fespace Vh(Th,P1);
+
+func real f(real t){
+	return -exp(-t)*sin(pi*x)*sin(pi*y)*(1-2*pi^2);
+}
+
+real delt = 0.1;
+real t0 = 0, tf = 1;
+
+int N = (tf-t0)/delt;
+
+Vh u, uold, v;
+Vh f1,f0;
+
+// Never place two different functions in the same integral
+varf a(u,v) = int2d(Th)(u*v + delt*(dx(u)*dx(v)+dy(u)*dy(v))) -int2d(Th)(uold*v);
+
+varf l(unused,v) = int2d(Th)(delt*(f1*v));
+
+real t=0;
+for (int i=0; i<N; i++)
+{
+	t = t+delt;
+	f1 = f(delt*(i+1));
+	
+	matrix A = a(Vh,Vh);
+	Vh F;
+	
+	F[] = l(0,Vh);
+	
+	set(A,solver=sparsesolver);
+	
+	u[] = A^-1*F[];
+	
+	uold = u;
+	
+	plot(u);
+}
