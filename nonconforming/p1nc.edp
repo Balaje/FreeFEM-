@@ -4,6 +4,8 @@ mesh Th = square(10,10);
 
 fespace Vh(Th,P1nc);
 
+plot(Th,wait=debug);
+
 Vh ue = sin(pi*x)*sin(pi*y);
 
 plot(ue,wait = debug);
