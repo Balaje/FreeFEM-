@@ -34,6 +34,17 @@ while(error > tol){
 
 plot(uh,wait=debug,value=debug);
 
+ofstream ff("plot_nl.txt");
+for (int i=0; i<Th.nt; i++)
+{
+	for(int j=0; j<3; j++)
+	{
+		ff<<Th[i][j].x<<" "<<Th[i][j].y<<" "<<uh[][Vh(i,j)]<<endl;
+	}
+	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<uh[][Vh(i,0)]<<"\n\n\n";
+}
+
+
 Vh ue = sin(pi*x)*sin(pi*y);
 
 plot(ue,wait=debug,value=debug);
