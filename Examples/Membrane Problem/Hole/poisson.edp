@@ -1,0 +1,31 @@
+bool debug = false;
+
+border Gamma1(t=0,2*pi){x=cos(t); y=sin(t);}; //Define the boundary
+border Gamma2(t=0,2*pi){x=0.3+0.3*cos(t); y=0.3*sin(t);}
+
+mesh Th = buildmesh(Gamma1(100)+Gamma2(-100)); //Triangulation Th
+fespace Vh(Th, P1); //Construct the finite element space Th with P1 elements.
+plot(Th,wait=debug,fill=true);
+
+Vh u,v; // Functions u and v are picewise linear functions
+func f = x*y; //Define a function f=x*y
+
+real cpu = clock();
+
+solve Prob(u,v,solver=LU) = int2d(Th)(dx(u)*dx(v)+dy(u)*dy(v)) //LHS of the weak form (Bilinear term)
+							- int2d(Th)(f*v) //RHS - Linear term
+							+ on(Gamma1,u=0) //Dirichlet boundary condition
+							+ on(Gamma2,u=0);
+						
+ofstream ff("graph.txt");
+for (int i=0; i<Th.nt; i++)
+{
+	for(int j=0; j<3; j++)
+	{
+		ff<<Th[i][j].x<<" "<<Th[i][j].y<<" "<<u[][Vh(i,j)]<<endl;
+	}
+	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<u[][Vh(i,0)]<<"\n\n\n";
+}
+
+plot(Th,u,ps="Solution_poisson.eps");
+cout<<"Cpu Time = "<<clock()-cpu<<endl;
