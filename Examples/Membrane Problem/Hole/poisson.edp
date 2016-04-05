@@ -1,3 +1,9 @@
+/* Solve the poisson problem 
+	on a circle with homogeneous boundary conditions
+	
+	and f = x*y
+*/
+
 bool debug = false;
 
 border Gamma1(t=0,2*pi){x=cos(t); y=sin(t);}; //Define the boundary
