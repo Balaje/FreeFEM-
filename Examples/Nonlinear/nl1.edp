@@ -1,0 +1,39 @@
+/* Program to solve the folowing nonlinear PDE subject to the boundary conditions
+	-lap(u) + u^3 = f(x,y) on \Omega
+	u = 0 on \Gamma
+	f(x,y) = 2*pi^2*sin(pi*x)*sin(pi*y) + (sin(pi*x)*sin(pi*y))^3
+	
+	
+	Exact u(x,y) = sin(pi*x)*sin(pi*y)
+*/
+
+bool debug = true;
+int N = 10;
+mesh Th = square(N,N);
+fespace Vh(Th,P1); //Using Linear Element
+
+Vh uh,vh;
+Vh uh0 = 0;//Initial Guess
+
+Vh V = uh0^2; //For Linearization
+
+func f = 2*pi^2*sin(pi*x)*sin(pi*y) + (sin(pi*x)*sin(pi*y))^3;
+
+macro Grad(u) [dx(u), dy(u)]//
+
+problem NL(uh,vh) = int2d(Th)(Grad(uh)'*Grad(vh) + uh*V*vh) - int2d(Th)(f*vh) + on(1,2,3,4,uh=0);
+
+real tol = 1e-8, error = 100.;
+
+while(error > tol){
+	NL;
+	V=uh^2;
+	error = sqrt(int2d(Th)(uh-uh0)^2);
+	uh0 = uh;
+}
+
+plot(uh,wait=debug,value=debug);
+
+Vh ue = sin(pi*x)*sin(pi*y);
+
+plot(ue,wait=debug,value=debug);
