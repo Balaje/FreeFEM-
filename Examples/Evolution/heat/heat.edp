@@ -1,0 +1,38 @@
+/* Program to solve the heat equation (Linear) on a square domain*/
+
+int N = 50;
+mesh Th = square(N,N);
+fespace Vh(Th,P1);
+
+func real f (real t){
+	return exp(-t)*(2*pi^2-1)*sin(pi*x)*sin(pi*y);
+}
+
+Vh uh,vh,f1;
+Vh u0 = sin(pi*x)*sin(pi*y);
+
+real T = 3.0, dt = 0.1,t;
+
+macro Grad(u) [dx(u), dy(u)]//
+
+problem Heat(uh,vh) = int2d(Th)(uh*vh + dt*(Grad(uh)'*Grad(vh))) - (int2d(Th)(dt*f1*vh)) - int2d(Th)(u0*vh)
+							+ on(1,2,3,4,uh=0);
+							
+for(int i = 0; i<T/dt; i++)
+{
+	t = (i+1)*dt;
+	f1 = f(t);
+	Heat;
+	u0 = uh;
+	//plot(uh,value=true,wait=false);
+}
+
+cout<<t<<endl;
+Vh ue = exp(-t)*sin(pi*x)*sin(pi*y);
+
+real error = sqrt(int2d(Th)(uh-ue)^2);
+
+plot(uh,value=true,wait=true);
+plot(ue,value=true,wait=true);
+
+cout<<"L^2 error = "<<error;
