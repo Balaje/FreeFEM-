@@ -1,0 +1,29 @@
+/* Program to solve the Kirchoff-Love plate problem
+	\sigma_{ij,ij} = f in \Omega
+	u = \frac{\partial u}{\partial n} = 0
+
+	\sigma_{ij} = \lambda \Delta u \delta_{ij} + mu*\chi_{ij}(u)
+	\chi_{ij} = \frac{\partial^2 u}{\partial x_i \partial y_i}
+*/
+
+load "Morley"
+bool debug = true;
+int N = 20;
+mesh Th = square(N,N);
+fespace Vh(Th,P2Morley); //Choose P2 Morley elements
+
+Vh [uh,uhx,uhy], [vh,vhx,vhy];
+
+func f = 1.;
+
+macro laplacian(u) (dxx(u) + dyy(u))//
+macro biharmonic(u,v) (dxx(u)*dxx(v) + 2.*dxy(u)*dxy(v) + dyy(u)*dyy(v))//
+
+problem Plate([uh,uhx,uhy],[vh,vhx,vhy]) = int2d(Th)(biharmonic(uh,vh)) - int2d(Th)(f*vh) + on(1,2,3,4,uh=0,uhx=0,uhy=0);
+
+Plate;
+//Vh ue = sin(pi*x)*sin(pi*y);
+plot(uh,wait=debug);
+
+
+
