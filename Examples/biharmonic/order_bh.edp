@@ -30,6 +30,7 @@ for(int i=0; i<p; i++)
 
 	macro Grad(u)[dx(u), dy(u)]//
 
+	//Defining the two problems
 	problem ap(ph,vh) = int2d(Th)(Grad(ph)'*Grad(vh)) - int2d(Th)(f*vh) + on(1,2,3,4,ph=0);
 	problem au(uh,vh) = -int2d(Th)(Grad(uh)'*Grad(vh)) - int2d(Th)(ph*vh) + on(1,2,3,4,uh=0);
 
