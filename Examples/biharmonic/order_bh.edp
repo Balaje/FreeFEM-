@@ -1,0 +1,55 @@
+/* Program to solve a biharmonic problem in FreeFEM++
+	\Laplacian^2 u = f in \Omega
+	
+	\Laplacian u = g_1 on \Partial \Omega
+	u = g2 on \Partial \Omega
+	
+	Exact u(x,y) = sin(pi*x)*sin(pi*y)
+	f(x,y) = -4*pi^4*sin(pi*x)*sin(pi*y)
+*/
+load "element_P3"
+bool debug = false;
+bool ismesh = false;
+
+int p=5;
+real[int] l2error(p);
+real[int] order(p-1);
+
+int N = 10;
+
+for(int i=0; i<p; i++)
+{
+	
+	mesh Th = square(N,N);
+	plot(Th,wait=ismesh);
+	fespace Vh(Th,P3);
+
+	Vh ph,vh,uh;
+
+	func f = -4*pi^4*sin(pi*x)*sin(pi*y); 
+
+	macro Grad(u)[dx(u), dy(u)]//
+
+	problem ap(ph,vh) = int2d(Th)(Grad(ph)'*Grad(vh)) - int2d(Th)(f*vh) + on(1,2,3,4,ph=0);
+	problem au(uh,vh) = -int2d(Th)(Grad(uh)'*Grad(vh)) - int2d(Th)(ph*vh) + on(1,2,3,4,uh=0);
+
+	//Solve the first problem to get ph
+	ap;
+	//Use the solution of the first problem and solve for uh
+	au;
+
+	plot(uh,value=true,wait=debug);
+	//Exact solution
+	Vh ue = sin(pi*x)*sin(pi*y);
+	
+	l2error[i] = sqrt(int2d(Th)(ue-uh)^2);
+	
+	N = N*2;
+}
+
+//Compute the order of convergence
+for(int j=0; j<p-1; j++)
+{
+	order[j] = log(l2error[j]/l2error[j+1])/log(2.);
+	cout<<order[j]<<endl;
+}
