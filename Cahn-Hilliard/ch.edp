@@ -29,8 +29,8 @@ real T = 3.0, delt = 0.1, t;
 macro Grad(u) [dx(u), dy(u)]//
 
 //Problem - Coupled System
-problem CH([uh,ph],[phi,psi]) = int2d(Th)(uh*phi + delt*Grad(ph)'*Grad(phi) + Grad(uh)'*Grad(psi) + ph*psi) - 
-								int2d(Th)(delt*f1*phi - u0*phi) + on(1,2,3,4,uh=0,ph=0);
+problem CH([uh,ph],[phi,psi]) = int2d(Th)(uh*phi + delt*Grad(ph)'*Grad(phi) - Grad(uh)'*Grad(psi) - ph*psi) - 
+								int2d(Th)(delt*f1*phi + u0*phi) + on(1,2,3,4,uh=0,ph=0);
 
 for (int i=0; i<T/delt; i++)
 {
@@ -46,6 +46,6 @@ Vh ue = exp(-t)*sin(pi*x)*sin(pi*y);
 plot(uh,wait=debug,value=debug);
 plot(ue,wait=debug,value=debug);
 
-real l2error = int2d(Th)(uh-ue)^2;
+real l2error = sqrt(int2d(Th)(uh-ue)^2);
 
 cout<<"L2error = "<<l2error<<endl;
