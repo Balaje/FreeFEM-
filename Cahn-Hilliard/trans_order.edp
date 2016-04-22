@@ -1,0 +1,57 @@
+/*
+	Order of convergence for the transient
+		Cahn-Hilliard Equation
+*/
+
+verbosity = 0;
+bool debug = true;
+int p = 5;
+real[int] l2error(p), order(p-1);
+
+int N = 3;
+
+for(int i=0; i<p; i++)
+{
+	mesh Th = square(N,N);
+	fespace Vh(Th,P1); //Using P1 elements
+
+	Vh uh,ph,phi,psi;
+
+	func real f(real t) {
+		return (-4*pi^4-1)*exp(-t)*sin(pi*x)*sin(pi*y);
+	}
+	Vh u0 = sin(pi*x)*sin(pi*y);
+	Vh f1;
+
+	real T = 0.5, delt = 0.1, t;
+
+	macro Grad(u) [dx(u), dy(u)]//
+
+	//Problem - Coupled System
+	problem CH([uh,ph],[phi,psi]) = int2d(Th)(uh*phi + delt*Grad(ph)'*Grad(phi) - Grad(uh)'*Grad(psi) - ph*psi) - 
+								int2d(Th)(delt*f1*phi + u0*phi) + on(1,2,3,4,uh=0,ph=0);
+
+	for (int i=0; i<T/delt; i++)
+	{
+		t = (i+1)*delt;
+		f1 = f(t);
+		CH;
+		u0 = uh;
+		//plot(uh,wait=debug,value=true);
+	}
+
+	Vh ue = exp(-t)*sin(pi*x)*sin(pi*y);
+
+	l2error[i] = sqrt(int2d(Th)(uh-ue)^2);
+	N = N*2;
+}
+
+//Loop to find the order of convergence
+cout<<endl<<"L2 Error: \t"<<"Order: "<<endl;
+for(int j=0; j<p-1; j++)
+{
+	order[j] = log(l2error[j]/l2error[j+1])/log(2.);
+	cout<<l2error[j]<<"\t"<<order[j]<<endl;
+	if(j==p-2)
+		cout<<l2error[j+1]<<endl;
+}
