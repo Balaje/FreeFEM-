@@ -1,0 +1,40 @@
+verbosity = 0;
+
+bool debug = true;
+
+int N = 10;
+mesh Th = square(N,N);
+
+load "element_P3"
+fespace Vh(Th,P3);
+
+Vh uh, vh;
+func real f(real t){
+	return (-4*pi^4-1)*exp(-t)*sin(pi*x)*sin(pi*y);
+}
+
+Vh u0 = sin(pi*x)*sin(pi*y);
+Vh f1;
+
+real T = 2., delt = 0.01, t;
+
+macro lap(u) (dxx(u)+dyy(u))//
+
+//Problem
+problem CH(uh,vh) = int2d(Th)(uh*vh - delt*lap(uh)*lap(vh)) - int2d(Th)(delt*f1*vh + u0*vh) + on(1,2,3,4,uh=0);
+
+for (int i=0; i<T/delt; i++)
+{
+	t = (i+1)*delt;
+	f1 = f(t);
+	CH;
+	u0 = uh;
+	//plot(uh,wait=debug,value=true);
+}
+//
+Vh ue = exp(-t)*sin(pi*x)*sin(pi*y);
+
+plot(uh,wait=debug,value=debug);
+//plot(ue,wait=debug,value=debug);
+
+
