@@ -1,6 +1,7 @@
 /*
 	Order of convergence for the transient
 		Cahn-Hilliard Equation
+		u_t - \Laplacian^2 u = f
 */
 
 verbosity = 0;

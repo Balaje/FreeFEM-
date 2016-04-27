@@ -11,7 +11,7 @@
 */
 
 bool debug = true;
-int N = 10;
+int N = 20;
 
 mesh Th = square(N,N);
 fespace Vh(Th,P1); //Using P1 elements
@@ -24,7 +24,7 @@ func real f(real t) {
 Vh u0 = sin(pi*x)*sin(pi*y);
 Vh f1;
 
-real T = 3.0, delt = 0.1, t;
+real T = 2., delt = 0.01, t;
 
 macro Grad(u) [dx(u), dy(u)]//
 
