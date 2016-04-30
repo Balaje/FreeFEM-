@@ -2,7 +2,7 @@ verbosity = 0;
 
 bool debug = true;
 
-int N = 10;
+int N = 64;
 mesh Th = square(N,N);
 
 load "element_P3"
@@ -10,13 +10,14 @@ fespace Vh(Th,P3);
 
 Vh uh, vh;
 func real f(real t){
-	return (-4*pi^4-1)*exp(-t)*sin(pi*x)*sin(pi*y);
+	//return (-4*pi^4-1)*exp(-t)*sin(pi*x)*sin(pi*y);
+	return 1;
 }
 
 Vh u0 = sin(pi*x)*sin(pi*y);
 Vh f1;
 
-real T = 2., delt = 0.01, t;
+real T = 2., delt = 0.1, t;
 
 macro lap(u) (dxx(u)+dyy(u))//
 
@@ -33,6 +34,16 @@ for (int i=0; i<T/delt; i++)
 }
 //
 Vh ue = exp(-t)*sin(pi*x)*sin(pi*y);
+
+ofstream ff("plotp1.txt");
+for (int i=0; i<Th.nt; i++)
+{
+	for(int j=0; j<3; j++)
+	{
+		ff<<Th[i][j].x<<" "<<Th[i][j].y<<" "<<uh[][Vh(i,j)]<<endl;
+	}
+	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<uh[][Vh(i,0)]<<"\n\n\n";
+}
 
 plot(uh,wait=debug,value=debug);
 //plot(ue,wait=debug,value=debug);
