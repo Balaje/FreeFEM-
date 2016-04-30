@@ -1,22 +1,23 @@
 bool debug = true;
 
 real theta = 4.*pi/3.;
-real a = 2., b = 1.;
+real a = 1., b = 1.;
 func z = x;
 
-border Gamma1(t=0,theta){x=a*cos(t); y=b*sin(t);};
-border Gamma2(t=theta,2*pi){x=a*cos(t); y=b*sin(t);};
+border Gamma(t=0,2*pi){x=a*cos(t); y=b*sin(t);};
+//border Gamma2(t=theta,2*pi){x=a*cos(t); y=b*sin(t);};
 
-mesh Th = buildmesh(Gamma1(100)+Gamma2(50));
+//mesh Th = buildmesh(Gamma1(100)+Gamma2(50));
+mesh Th = buildmesh(Gamma(100));
 
-fespace Vh(Th,P2);
+fespace Vh(Th,P1);
 
 Vh phi,w;
 
-func f = 1;
+func f = 2*pi^2*sin(pi*x)*sin(pi*y);
 
-solve Poisson(phi,w,solver=LU) = int2d(Th)(dx(phi)*dx(w)+dy(phi)*dy(w))
-									- int2d(Th)(f*w) + on(Gamma1,phi=z);
+solve Poisson(phi,w) = int2d(Th)(dx(phi)*dx(w)+dy(phi)*dy(w))
+									- int2d(Th)(f*w) + on(Gamma,phi=0);
 									
 ofstream ff("graph.txt");
 for (int i=0; i<Th.nt; i++)
@@ -28,5 +29,6 @@ for (int i=0; i<Th.nt; i++)
 	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<phi[][Vh(i,0)]<<"\n\n\n";
 }
 									
-plot(Th,wait=debug,ps="Membrane_mesh.eps");
-plot(phi,wait=debug,ps="Membrane_sol.eps");
+//plot(Th,wait=debug,ps="Membrane_mesh.eps");
+plot(Th,wait=debug);
+plot(phi,wait=debug,value=debug);

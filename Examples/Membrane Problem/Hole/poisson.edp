@@ -7,11 +7,11 @@
 bool debug = false;
 
 border Gamma1(t=0,2*pi){x=cos(t); y=sin(t);}; //Define the boundary
-border Gamma2(t=0,2*pi){x=0.3+0.3*cos(t); y=0.3*sin(t);}
+border Gamma2(t=0,2*pi){x=0.3*cos(t); y=0.3*sin(t);}
 
 mesh Th = buildmesh(Gamma1(100)+Gamma2(-100)); //Triangulation Th
 fespace Vh(Th, P1); //Construct the finite element space Th with P1 elements.
-plot(Th,wait=debug,fill=true);
+plot(Th,wait=debug,ps="mesh.eps");
 
 Vh u,v; // Functions u and v are picewise linear functions
 func f = x*y; //Define a function f=x*y

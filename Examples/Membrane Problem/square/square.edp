@@ -43,4 +43,5 @@ uh[] = A^-1*F[];
 Vh error = uh-Ue;
 
 cout<<endl<<"L^2 error = "<<sqrt(int2d(Th)(error^2))<<endl<<endl;
-plot(uh,wait=debug);
+plot(uh,wait=debug,value=debug);
+plot(Ue,wait=debug,value=debug);

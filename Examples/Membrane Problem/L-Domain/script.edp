@@ -8,7 +8,7 @@ border g4(t=0,1){x=1;y=t;};
 border g5(t=1,-1){x=t;y=1;};
 border g6(t=1,-1){x=-1;y=t;};
 
-mesh Th = buildmesh(g1(10)+g2(10)+g3(10)+g4(10)+g5(10)+g6(10));
+mesh Th = buildmesh(g1(20)+g2(20)+g3(20)+g4(20)+g5(20)+g6(20));
 
 plot(Th,wait=true);
 
@@ -33,6 +33,6 @@ for (int i=0; i<Th.nt; i++)
 	ff<<Th[i][0].x<<" "<<Th[i][0].y<<" "<<u[][Vh(i,0)]<<"\n\n\n";
 }
 
-
-plot(u,wait = true);
-
+Vh ue = g;
+plot(u,wait = true,value = true);
+plot(ue,wait = true,value = true);
