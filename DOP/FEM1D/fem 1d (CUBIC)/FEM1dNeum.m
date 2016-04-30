@@ -90,8 +90,21 @@ for j=1:p-1
 end
 figure(1)
 plot(log(h),log(error));
+grid on
+xlabel('log(h)');
+ylabel('log(error)');
+title('Order of convergence plot');
+
 figure(2)
 plot(X,U,X,Uh,'o');
-
+hold on
+plot(X(1:3:size(U,1)+1),zeros(size(X(1:3:size(U,1)+1),1)),'b*')
+legend('Exact Solution','Approximate Solution')
+grid on
+xlabel('x');
+ylabel('u');
+str = strcat(num2str((size(U,1)-1)/3),' elements');
+title(str);
 order'
+
 

@@ -10,11 +10,11 @@ close all
 
 format long
 
-N = 40;
+N = 10;
 
 a = 0; b = 1;
 
-for p=1:5
+for p=1:2
     h(p) = (b-a)/N;
     x = a:h(p):b;
     K = zeros(N+1,N+1);
@@ -73,6 +73,18 @@ order'
 
 figure(1)
 plot(x,U,'*',x,exact);
-legend('Approx','Exact');
+hold on
+plot(x,zeros(size(x,1),1),'b*');
+legend('Exact Solution','Approximate Solution')
+grid on
+xlabel('x');
+ylabel('u');
+str = strcat(num2str(size(U,1)-1),' elements');
+title(str)
+
 figure(2)
 plot(log(h),log(error1));
+grid on
+xlabel('log(h)');
+ylabel('log(error)');
+title('Order of convergence plot');

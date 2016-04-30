@@ -3,7 +3,7 @@ clc
 syms x h;
 
 % Order of polynomial 
-N = 3;
+N = 1;
 
 a = 0;  b = 1;
 h1 = (b-a)/N;
@@ -22,7 +22,7 @@ for i=1:size(D,2)
     
     A(i) = simplify(poly);
 
-    %ezplot(poly,[a,b]);
+    ezplot(poly,[a,b]);
     %axis([a,h*b,a,h*b+0.1]);
 end
 

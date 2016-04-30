@@ -67,12 +67,21 @@ for j=1:p-1
     order(j) = log(error1(j)/error1(j+1))/log(2);
 end
 
-order
+order'
 
 figure(1)
 plot(x,U,'*',x,exact);
-legend('Approx','Exact');
+legend('Exact Solution','Approximate Solution')
+grid on
+xlabel('x');
+ylabel('u');
+str = strcat(num2str(size(U,1)-1),' elements');
+title(str)
 
 figure(2)
 plot(log(h),log(error1));
+grid on
+xlabel('log(h)');
+ylabel('log(error)');
+title('Order of convergence plot');
 
