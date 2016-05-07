@@ -14,7 +14,7 @@ N = 10;
 
 a = 0; b = 1;
 
-for p=1:2
+for p=1:4
     h(p) = (b-a)/N;
     x = a:h(p):b;
     K = zeros(N+1,N+1);
